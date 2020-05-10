@@ -148,23 +148,6 @@ void	ft_echo(void)
 // 	}
 // }
 
-int		ft_read_line(char **buf)
-{
-	int j;
-
-	*buf = malloc(1024);
-	j = read(0,*buf, 1024);
-	(*buf)[j] = '\0';
-	//ft_putstr(buf);
-	if(j >= 0)
-		return(1);
-	else
-	{
-		ft_putstr("error in reading");
-		exit(-1);
-	}	
-}
-
 int		test(void)
 {
 	tests.echo = ft_strcmpr(command_info.command, "echo");
@@ -188,23 +171,6 @@ char	*ft_strcpy(char *s1, char *s2)
 	i = -1;
 	while(s2[++i])
 		s1[i] = s2[i];
-	s1[i] = '\0';
-	return(s1);
-}
-
-char	*ft_check_cpy(char *s1, char *s2)
-{
-	int i;
-
-	i = -1;
-	while(s2[i])
-	{
-		if(s2[i] == '$')
-		{
-
-		}
-		s1[i] = s2[i];
-	}
 	s1[i] = '\0';
 	return(s1);
 }
@@ -270,7 +236,7 @@ void	change_one_two(char a)
 		g_one = g_one == 1 ? 0 : 1;
 }
 
-void	check_env(char	**args, int i, char **env)
+void	cat_command_string(char	**args, int i, char **env)
 {
 	int j;
 	char *var;
@@ -374,9 +340,7 @@ void	fill_cmd(char **args, char **env)
 		i++;
 	}
 	if(args[i])
-	{
-		check_env(args, i, env);
-	}
+		cat_command_string(args, i, env);
 }
 
 void	init_all()
@@ -385,6 +349,7 @@ void	init_all()
 	command_info.string = NULL;
 	command_info.string_len = 0;
 }
+
 void	fill_buf(char **buf)
 {
 	*buf = malloc(100);
@@ -471,13 +436,12 @@ void	ft_shell(char **env)
 			// ft_putstr(buf);
 			// ft_putchar('\n');
 			//check_command(buf);
-
+			free(buf);
 		}
 		else
 		{
 			ft_putstr("no input");
 		}
-		free(buf);
 		if(debug == 1)
 			break;
 	}
